@@ -8,7 +8,8 @@
 // Initialize GLFW and create a window
 int main() {
 
-    GLFWwindow* window = glfwCreateWindow(800, 600, "OpenGL Example", glfwGetPrimaryMonitor(), NULL);
+    glfwInit();
+    GLFWwindow* window = glfwCreateWindow(800, 600, "OpenGL Example", NULL, NULL);
     if (!window) {
         glfwTerminate();
         return -1;
@@ -21,6 +22,8 @@ int main() {
     if (glewInit() != GLEW_OK) {
         return -1;
     }
+
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 
     // Main loop
     while (!glfwWindowShouldClose(window)) {
