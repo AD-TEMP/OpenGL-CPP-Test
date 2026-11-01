@@ -5,7 +5,11 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
 #include <iostream>
+#include <fstream>
+#include <sstream>
+
 #include "primitive.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -14,18 +18,21 @@ void processInput(GLFWwindow* window);
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-const char* vertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"void main()\n"
-"{\n"
-"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-"}\0";
-const char* fragmentShaderSource = "#version 330 core\n"
-"out vec4 FragColor;\n"
-"void main()\n"
-"{\n"
-    "FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-"}\n";
+//const char* vertexShaderSource = "#version 330 core\n"
+//"layout (location = 0) in vec3 aPos;\n"
+//"void main()\n"
+//"{\n"
+//"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+//"}\0";
+//const char* fragmentShaderSource = "#version 330 core\n"
+//"out vec4 FragColor;\n"
+//"void main()\n"
+//"{\n"
+//    "FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+//"}\n";
+
+const char* vertexShaderSource;
+const char* fragmentShaderSource;
 
 // Initialize GLFW and create a window
 int main() {
@@ -80,6 +87,19 @@ int main() {
 
         // Vertex shader
 
+        // THIS IS CODE THAT SHOULD POSSIBLY BE MOVED TO A CLASS
+        std::ifstream vShaderFile;
+        vShaderFile.open("shader.vert");
+
+        std::stringstream vShaderStream;
+        vShaderStream << vShaderFile.rdbuf();
+
+        vShaderFile.close();
+
+        std::string vertexCode = vShaderStream.str();
+        const char* vShaderCode = vertexCode.c_str();
+        // END
+
         // Generate VBO, bind it , and copy data into it
         unsigned int VBO;
         glGenBuffers(1, &VBO);
@@ -93,7 +113,7 @@ int main() {
         vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
         // Attach shader source code to shader object and compile shader
-        glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+        glShaderSource(vertexShader, 1, &vShaderCode, NULL);
         glCompileShader(vertexShader);
 
         // Check if compiling shader was successful
@@ -108,12 +128,25 @@ int main() {
 
         //Fragment shader
 
+        // THIS IS CODE THAT SHOULD POSSIBLY BE MOVED TO A CLASS
+        std::ifstream fShaderFile;
+        fShaderFile.open("shader.frag");
+
+        std::stringstream fShaderStream;
+        fShaderStream << fShaderFile.rdbuf();
+
+        fShaderFile.close();
+
+        std::string fragmentCode = fShaderStream.str();
+        const char* fShaderCode = fragmentCode.c_str();
+        // END
+
         // Store and create fragment shader
         unsigned int fragmentShader;
         fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
         // Attach shader source code to shader object and compile shader
-        glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+        glShaderSource(fragmentShader, 1, &fShaderCode, NULL);
         glCompileShader(fragmentShader);
 
         // Check if compiling shader was successful
@@ -169,6 +202,9 @@ int main() {
         // 4. then set our vertex attributes pointers
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
+
+        // Sets the polygon mode to either fill or line (wireframe)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         glUseProgram(shaderProgram);
         glBindVertexArray(VAO);

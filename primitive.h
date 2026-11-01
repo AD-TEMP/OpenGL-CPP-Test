@@ -4,5 +4,9 @@ class Primitive
 {
 private:
 public:
-	void Circle(float& vertices, int& indices);
+	Primitive(float& vertices);
+
+	static Primitive Circle();
+
+	static Primitive Triangle();
 };
