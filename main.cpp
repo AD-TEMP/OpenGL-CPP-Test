@@ -117,8 +117,8 @@ int main() {
         float timeValue = glfwGetTime();
         float changeValue = sin(timeValue) / 2.0f + 0.5f;
         int vertexColorLocation = 0;
-        shader.SetInt("ourColor", vertexColorLocation);
-        //glUniform4f(vertexColorLocation, changeValue, changeValue, changeValue, 1.0f);
+        shader.SetInt("vertexColor", vertexColorLocation);
+        glUniform4f(vertexColorLocation, changeValue, changeValue, changeValue, 1.0f);
 
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
