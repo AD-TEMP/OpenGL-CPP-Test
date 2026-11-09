@@ -86,6 +86,7 @@ int main() {
     glGenBuffers(1, &VBO);
     glGenVertexArrays(1, &VAO);
     
+    // Must always bind VAO before binding other buffers, as far as I can tell
     glBindVertexArray(VAO);
     
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
